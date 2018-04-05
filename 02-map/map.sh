@@ -1,0 +1,89 @@
+#!/bin/bash -e
+
+. ../common.sh
+
+task=$1
+log=$logDir/$task.log
+bwadb=/rds/project/djs200/rds-djs200-acorg/bt/root/share/bwa-indices/homo-sapiens
+fastq=$dataDir/$task.trim.fastq.gz
+out=$task-unmapped.fastq.gz
+
+echo "02-map on task $task started at `date`" >> $log
+echo "  FASTQ is $fastq" >> $log
+
+if [ ! -f $fastq ]
+then
+    echo "  FASTQ file '$fastq' does not exist." >> $log
+    exit 1
+fi
+
+if [ ! -f $bwadb.bwt ]
+then
+    echo "  BWA database file '$bwadb.bwt' does not exist." >> $log
+    exit 1
+fi
+
+function skip()
+{
+    # Copy our input FASTQ to our output unchanged.
+    cp $fastq $out
+}
+
+function map()
+{
+    local sam=$task.sam
+    # local bamtmp=$task.tmp.bam
+    # local bam=$task.bam
+    nproc=$(nproc --all)
+
+    # Map FASTQ to human genome.
+    echo "  bwa mem started at `date`" >> $log
+    bwa mem -t $nproc $bwadb $fastq > $sam
+    echo "  bwa mem stopped at `date`" >> $log
+
+    # Convert SAM to BAM.
+    # echo "  samtools sam -> bam conversion started at `date`" >> $log
+    # samtools view --threads $nproc -bS $sam > $bam
+    # rm $sam
+    # echo "  samtools sam -> bam conversion stopped at `date`" >> $log
+
+    # Sort BAM.
+    # echo "  samtools sort started at `date`" >> $log
+    # samtools sort --threads $nproc -o $bam $bamtmp
+    # rm $bamtmp
+    # echo "  samtools sort stopped at `date`" >> $log
+
+    # Extract the unmapped reads.
+    echo "  extract unmapped reads started at `date`" >> $log
+    samtools fastq --threads $nproc -f 4 $sam | gzip > $out
+    rm $sam
+    echo "  extract unmapped reads stopped at `date`" >> $log
+}
+
+
+if [ $SP_SIMULATE = "1" ]
+then
+    echo "  This is a simulation." >> $log
+else
+    echo "  This is not a simulation." >> $log
+    if [ $SP_SKIP = "1" ]
+    then
+        echo "  Mapping is being skipped on this run." >> $log
+        skip
+    elif [ -f $out ]
+    then
+        if [ $SP_FORCE = "1" ]
+        then
+            echo "  Pre-existing output file $out exists, but --force was used. Overwriting." >> $log
+            map
+        else
+            echo "  Will not overwrite pre-existing output file $out. Use --force to make me." >> $log
+        fi
+    else
+        echo "  Pre-existing output file $out does not exist. Mapping." >> $log
+        map
+    fi
+fi
+
+echo "02-map on task $task stopped at `date`" >> $log
+echo >> $log
