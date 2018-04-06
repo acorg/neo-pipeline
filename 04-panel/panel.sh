@@ -39,11 +39,21 @@ function skip()
 function panel()
 {
     echo "  noninteractive-alignment-panel.py started at `date`" >> $log
+    # Remove the output directory because it could be a pre-existing
+    # symlink to very slow cold storage. We'll write to fast disk
+    # and sometime later we can archive it if we want. Make sure to
+    # remove the destination of the link, if it's a link.
+    local outputDir=out
+    if [ -L $outputDir ]
+    then
+        rm -fr $(readlink $outputDir)
+    fi
+    rm -fr $outputDir
     noninteractive-alignment-panel.py \
       --json $json \
       --fastq $fastq \
       --matcher diamond \
-      --outputDir out \
+      --outputDir $outputDir \
       --withScoreBetterThan 60 \
       --maxTitles 100 \
       --minMatchingReads 10 \

@@ -69,6 +69,15 @@ else
         if [ $SP_FORCE = "1" ]
         then
             echo "  Pre-existing output file $out exists, but --force was used. Overwriting." >> $log
+            # Remove the output file because it could be a pre-existing
+            # symlink to very slow cold storage. We'll write to fast disk
+            # and sometime later we can archive it if we want. Make sure to
+            # remove the destination of the link, if it's a link.
+            if [ -L $out ]
+            then
+                rm $(readlink $out)
+            fi
+            rm $out
             map
         else
             echo "  Will not overwrite pre-existing output file $out. Use --force to make me." >> $log
