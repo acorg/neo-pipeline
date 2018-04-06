@@ -11,8 +11,6 @@ lengthDistributionOut=$statsDir/$task.read-lengths
 
 logStepStart $log
 
-echo "01-stats on task $task started at `date`" >> $log
-
 if [ ! -f $fastq ]
 then
     echo "  FASTQ file '$fastq' does not exist." >> $log
