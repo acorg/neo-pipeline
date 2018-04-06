@@ -50,7 +50,7 @@ function panel()
       --scoreCutoff 50 \
       --minCoverage 0.1 \
       --negativeTitleRegex phage \
-      --diamondDatabaseFastaFilename $dbFastaFile > summary-proteins
+      --databaseFastaFilename $dbFastaFile > summary-proteins
     echo "  noninteractive-alignment-panel.py stopped at `date`" >> $log
 
     echo "  proteins-to-pathogens started at `date`" >> $log
