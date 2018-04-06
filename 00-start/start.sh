@@ -2,22 +2,15 @@
 
 . ../common.sh
 
-log=$sampleLogFile
+# We cannot initially write to a log file because the log directory may not
+# exist yet. So write initial errors to stdout.
 
-logStepStart $log
-
-# Remove the marker file that indicates when a job is fully complete or
-# that there has been an error and touch the file that shows we're running.
-rm -f $doneFile $errorFile
-touch $runningFile
-
-# Remove the top-level logging directory. With a sanity check!
-if [ ! $logDir = ../logs ]
+# Remove the top-level logging directory (with a sanity check on its name).
+if [ ! "$logDir" = ../logs ]
 then
     # SLURM will catch this output and put it into slurm-N.out where N is
     # out job id.
-    echo "  logDir variable has unexpected value '$logDir'!" >>$log
-    logStepStop $log
+    echo "$0: logDir variable has unexpected value '$logDir'!" >&2
     exit 1
 fi
 
@@ -26,10 +19,19 @@ rm -fr $logDir
 mkdir $logDir || {
     # SLURM will catch this output and put it into slurm-N.out where N is
     # out job id.
-    echo "  Could not create log directory '$logDir'!" >>$log
-    logStepStop $log
+    echo "$0: Could not create log directory '$logDir'!" >&2
     exit 1
 }
+
+# From here on we can write errors to a log file.
+
+log=$sampleLogFile
+logStepStart $log
+
+# Remove the marker file that indicates when a job is fully complete or
+# that there has been an error and touch the file that shows we're running.
+rm -f $doneFile $errorFile
+touch $runningFile
 
 if [ ! -d $statsDir ]
 then
