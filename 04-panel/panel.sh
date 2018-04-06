@@ -9,22 +9,7 @@ out=summary-virus
 
 echo "04-panel started at `date`" >> $log
 
-if [ ! -f $sequencingToSample ]
-then
-    echo "  Sequencing to sample file '$sequencingToSample' not found!" >> $log
-    exit 1
-fi
-
-sample=$(sampleName)
-
-# Find the sequence files that correspond to this sample.
-tasks=$(egrep "^B[0-9]+ $sample\$" $sequencingToSample | awk '{print $1}')
-
-if [ -z "$tasks" ]
-then
-    echo "  No matches for sample '$sample' found in $sequencingToSample!" >> $log
-    exit 1
-fi
+tasks=$(tasksForSample)
 
 json=
 fastq=
@@ -35,7 +20,7 @@ do
     fastq="$fastq ../02-map/$task-unmapped.fastq.gz"
 done
 
-dbFastaFile=/rds/project/djs200/rds-djs200-acorg/bt/root/share/ncbi/viral-refseq/viral-protein-20161124/viral.protein.fasta
+dbFastaFile=$root/share/ncbi/viral-refseq/viral-protein-20161124/viral.protein.fasta
 
 if [ ! -f $dbFastaFile ]
 then

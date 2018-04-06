@@ -8,22 +8,8 @@ log=$sampleLogFile
 
 echo "05-sample-count started at `date`" >> $log
 
-if [ ! -f $sequencingToSample ]
-then
-    echo "  Sequencing to sample file '$sequencingToSample' not found!" >> $log
-    exit 1
-fi
-
+tasks=$(tasksForSample)
 sample=$(sampleName)
-
-# Find the sequence files that correspond to this sample.
-tasks=$(egrep "^N[0-9]+ $sample\$" $sequencingToSample | awk '{print $1}')
-
-if [ -z "$tasks" ]
-then
-    echo "  No matches for sample '$sample' found in $sequencingToSample!" >> $log
-    exit 1
-fi
 
 out=$statsDir/$sample.read-count
 

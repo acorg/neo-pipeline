@@ -32,12 +32,6 @@ echo "SLURM pipeline started at `date`" >> $log
 echo >> $log
 echo "00-start started at `date`" >> $log
 
-if [ ! -f $sequencingToSample ]
-then
-    echo "  Sequencing to sample file '$sequencingToSample' not found!" >> $log
-    exit 1
-fi
-
 if [ ! -d $statsDir ]
 then
     echo "  Making stats directory '$statsDir'." >> $log
@@ -47,17 +41,7 @@ then
     }
 fi
 
-
-sample=$(sampleName)
-
-# Emit a task for all sequencing files that correspond to this sample.
-tasks=$(egrep "^N[0-9]+ $sample\$" $sequencingToSample | awk '{print $1}')
-
-if [ -z "$tasks" ]
-then
-    echo "  No matches for sample '$sample' found in $sequencingToSample!" >> $log
-    exit 1
-fi
+tasks=$(tasksForSample)
 
 for task in $tasks
 do

@@ -4,7 +4,7 @@
 
 task=$1
 log=$logDir/$task.log
-bwadb=/rds/project/djs200/rds-djs200-acorg/bt/root/share/bwa-indices/homo-sapiens
+bwadb=$root/share/bwa-indices/homo-sapiens
 fastq=$dataDir/$task.trim.fastq.gz
 out=$task-unmapped.fastq.gz
 
@@ -33,7 +33,7 @@ function map()
 {
     local sam=$task.sam
     # local bamtmp=$task.tmp.bam
-    # local bam=$task.bam
+    local bam=$task.bam
     nproc=$(nproc --all)
 
     # Map FASTQ to human genome.
@@ -42,21 +42,15 @@ function map()
     echo "  bwa mem stopped at `date`" >> $log
 
     # Convert SAM to BAM.
-    # echo "  samtools sam -> bam conversion started at `date`" >> $log
-    # samtools view --threads $nproc -bS $sam > $bam
-    # rm $sam
-    # echo "  samtools sam -> bam conversion stopped at `date`" >> $log
-
-    # Sort BAM.
-    # echo "  samtools sort started at `date`" >> $log
-    # samtools sort --threads $nproc -o $bam $bamtmp
-    # rm $bamtmp
-    # echo "  samtools sort stopped at `date`" >> $log
-
-    # Extract the unmapped reads.
-    echo "  extract unmapped reads started at `date`" >> $log
-    samtools fastq --threads $nproc -f 4 $sam | gzip > $out
+    echo "  samtools sam -> bam conversion started at `date`" >> $log
+    samtools view --threads $nproc -bS $sam > $bam
     rm $sam
+    echo "  samtools sam -> bam conversion stopped at `date`" >> $log
+
+    # Extract the unmapped reads. Leave one core for the gzip.
+    echo "  extract unmapped reads started at `date`" >> $log
+    samtools fastq --threads $((nproc - 1)) -f 4 $bam | gzip > $out
+    rm $bam
     echo "  extract unmapped reads stopped at `date`" >> $log
 }
 

@@ -11,7 +11,7 @@ echo "03-diamond on task $task started at `date`" >> $log
 echo "  FASTQ file is $fastq" >> $log
 
 
-dbfile=$HOME/scratch/root/share/ncbi/diamond-dbs/viral-protein.dmnd
+dbfile=$root/share/ncbi/diamond-dbs/viral-protein.dmnd
 
 if [ ! -f $dbfile ]
 then
