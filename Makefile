@@ -23,6 +23,7 @@ clean-3: clean-2
 	rm -fr \
                logs \
                02-map/*.sam \
+               02-map/*.bam \
                04-panel/out \
                04-panel/summary-proteins \
                04-panel/summary-virus \
