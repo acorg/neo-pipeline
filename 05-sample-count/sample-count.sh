@@ -6,7 +6,7 @@
 # 'collect' step that is only run once.
 log=$sampleLogFile
 
-echo "05-sample-count started at `date`" >> $log
+logStepStart $log
 
 tasks=$(tasksForSample)
 sample=$(sampleName)
@@ -56,5 +56,4 @@ else
     fi
 fi
 
-echo "05-sample-count stopped at `date`" >> $log
-echo >> $log
+logStepStop $log

@@ -2,6 +2,10 @@
 
 . ../common.sh
 
+log=$sampleLogFile
+
+logStepStart $log
+
 # Remove the marker file that indicates when a job is fully complete or
 # that there has been an error and touch the file that shows we're running.
 rm -f $doneFile $errorFile
@@ -12,7 +16,8 @@ if [ ! $logDir = ../logs ]
 then
     # SLURM will catch this output and put it into slurm-N.out where N is
     # out job id.
-    echo "$0: logDir variable has unexpected value '$logDir'!" >&2
+    echo "  logDir variable has unexpected value '$logDir'!" >>$log
+    logStepStop $log
     exit 1
 fi
 
@@ -21,22 +26,17 @@ rm -fr $logDir
 mkdir $logDir || {
     # SLURM will catch this output and put it into slurm-N.out where N is
     # out job id.
-    echo "$0: Could not create log directory '$logDir'!" >&2
+    echo "  Could not create log directory '$logDir'!" >>$log
+    logStepStop $log
     exit 1
 }
-
-log=$sampleLogFile
-
-echo "SLURM pipeline started at `date`" >> $log
-
-echo >> $log
-echo "00-start started at `date`" >> $log
 
 if [ ! -d $statsDir ]
 then
     echo "  Making stats directory '$statsDir'." >> $log
     mkdir $statsDir || {
         echo "  Could not make stats dir '$statsDir'!" >> $log
+        logStepStop $log
         exit 1
     }
 fi
@@ -50,6 +50,7 @@ do
     if [ ! -f $fastq ]
     then
         echo "  Task $task FASTQ file '$fastq' does not exist!" >> $log
+        logStepStop $log
         exit 1
     fi
 
@@ -63,5 +64,4 @@ do
     echo "TASK: $task"
 done
 
-echo "00-start stopped at `date`" >> $log
-echo >> $log
+logStepStop $log

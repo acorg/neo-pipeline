@@ -9,11 +9,18 @@ countOut=$statsDir/$task.read-count
 MD5Out=$statsDir/$task.md5
 lengthDistributionOut=$statsDir/$task.read-lengths
 
+logStepStart $log
+
+echo "01-stats on task $task started at `date`" >> $log
+
 if [ ! -f $fastq ]
 then
     echo "  FASTQ file '$fastq' does not exist." >> $log
+    logStepStop $log
     exit 1
 fi
+
+echo "  FASTQ is $fastq" >> $log
 
 function stats()
 {
@@ -28,7 +35,6 @@ function stats()
     md5sum $fastq > $MD5Out
 }
 
-echo "01-stats on task $task started at `date`" >> $log
 echo "  FASTQ is $fastq" >> $log
 
 if [ $SP_SIMULATE = "1" ]
@@ -54,5 +60,4 @@ else
     fi
 fi
 
-echo "01-stats on task $task stopped at `date`" >> $log
-echo >> $log
+logStepStop $log

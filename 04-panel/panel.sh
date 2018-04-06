@@ -7,7 +7,7 @@
 log=$sampleLogFile
 out=summary-virus
 
-echo "04-panel started at `date`" >> $log
+logStepStart $log
 
 tasks=$(tasksForSample)
 
@@ -25,6 +25,7 @@ dbFastaFile=$root/share/ncbi/viral-refseq/viral-protein-20161124/viral.protein.f
 if [ ! -f $dbFastaFile ]
 then
     echo "  DIAMOND database FASTA file $dbfile does not exist!" >> $log
+    logStepStop $log
     exit 1
 fi
 
@@ -93,5 +94,4 @@ else
     fi
 fi
 
-echo "04-panel stopped at `date`" >> $log
-echo >> $log
+logStepStop $log

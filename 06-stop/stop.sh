@@ -4,7 +4,12 @@
 
 log=$sampleLogFile
 
-echo "SLURM pipeline finished at `date`" >> $log
+logStepStart $log
 
+echo "  Creating $doneFile." >> $log
 touch $doneFile
+
+echo "  Removing $runningFile." >> $log
 rm -f $runningFile
+
+logStepStop $log

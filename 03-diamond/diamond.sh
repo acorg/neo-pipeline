@@ -6,16 +6,15 @@ task=$1
 log=$logDir/$task.log
 fastq=../02-map/$task-unmapped.fastq.gz
 out=$task.json.bz2
-
-echo "03-diamond on task $task started at `date`" >> $log
-echo "  FASTQ file is $fastq" >> $log
-
-
 dbfile=$root/share/ncbi/diamond-dbs/viral-protein.dmnd
+
+logStepStart $log
+echo "  FASTQ file is $fastq" >> $log
 
 if [ ! -f $dbfile ]
 then
     echo "  DIAMOND database file $dbfile does not exist!" >> $log
+    logStepStop $log
     exit 1
 fi
 
@@ -74,5 +73,4 @@ else
     echo "  This is a simulation." >> $log
 fi
 
-echo "03-diamond on task $task stopped at `date`" >> $log
-echo >> $log
+logStepStop $log

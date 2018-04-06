@@ -8,18 +8,20 @@ bwadb=$root/share/bwa-indices/homo-sapiens
 fastq=$dataDir/$task.trim.fastq.gz
 out=$task-unmapped.fastq.gz
 
-echo "02-map on task $task started at `date`" >> $log
+logStepStart $log
 echo "  FASTQ is $fastq" >> $log
 
 if [ ! -f $fastq ]
 then
     echo "  FASTQ file '$fastq' does not exist." >> $log
+    logStepStop $log
     exit 1
 fi
 
 if [ ! -f $bwadb.bwt ]
 then
     echo "  BWA database file '$bwadb.bwt' does not exist." >> $log
+    logStepStop $log
     exit 1
 fi
 
@@ -88,5 +90,4 @@ else
     fi
 fi
 
-echo "02-map on task $task stopped at `date`" >> $log
-echo >> $log
+logStepStop $log
