@@ -23,15 +23,16 @@ function skip()
 {
     # Make it look like we ran and produced no output.
     echo "  Creating no-results output file due to skipping." >> $log
-    cat header.json | bzip2 > $out
+    bzip2 < header.json > $out
 }
 
 function run_diamond()
 {
     echo "  DIAMOND blastx started at `date`" >> $log
+    # Subtract 2 from the total number of cores so we have cores left for
+    # the two processes in the pipeline following the diamond call.
     diamond blastx \
-        --tmpdir /ramdisks \
-        --threads 24 \
+        --threads $(($(nproc --all) - 2)) \
         --query $fastq \
         --db $dbfile \
         --outfmt 6 qtitle stitle bitscore evalue qframe qseq qstart qend sseq sstart send slen btop |
