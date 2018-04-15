@@ -4,7 +4,10 @@ x:
 	@echo "There is no default make target. Use 'make run' to run the SLURM pipeline."
 
 run:
-	slurm-pipeline.py -s specification.json > status.json
+	slurm-pipeline.py --specification specification.json > status.json
+
+status:
+	slurm-pipeline-status.py --specification status.json
 
 # Remove all large intermediate files. Only run this if you're sure you
 # want to throw away all that work!

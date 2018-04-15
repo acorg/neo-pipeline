@@ -47,6 +47,7 @@
         {
             "cwd": "07-error",
             "dependencies": ["stop"],
+            "error step": true,
             "name": "error",
             "script": "sbatch.sh"
         }
