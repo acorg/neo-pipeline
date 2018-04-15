@@ -43,6 +43,12 @@
             "dependencies": ["panel", "sample-count"],
             "name": "stop",
             "script": "sbatch.sh"
+        },
+        {
+            "cwd": "07-error",
+            "dependencies": ["stop"],
+            "name": "error",
+            "script": "sbatch.sh"
         }
     ]
 }
