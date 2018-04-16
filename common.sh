@@ -96,13 +96,15 @@ function checkFastq()
             dest=$(readlink $fastq)
             echo "  $fastq is a symlink to $dest." >> $log
             echo "  Attempting to use zcat to read the destination file '$dest'." >> $log
-            zcat $dest | head >/dev/null
+            # zcat $dest | head >/dev/null
+            zcat $dest | head >>$log
             case $? in
                 0) echo "    zcat read succeeded." >> $log;;
                 *) echo "    zcat read failed." >> $log;;
             esac
             echo "  Attempting to use zcat to read the link '$fastq'." >> $log
-            zcat $fastq | head >/dev/null
+            zcat $fastq | head >>$log
+            # zcat $fastq | head >/dev/null
             case $? in
                 0) echo "    zcat read succeeded." >> $log;;
                 *) echo "    zcat read failed." >> $log;;
