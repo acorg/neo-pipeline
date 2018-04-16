@@ -6,6 +6,9 @@ x:
 run:
 	slurm-pipeline.py --specification specification.json > status.json
 
+force:
+	slurm-pipeline.py --specification specification.json --force > status.json
+
 status:
 	slurm-pipeline-status.py --specification status.json
 
