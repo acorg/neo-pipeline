@@ -9,16 +9,26 @@ fastq=$dataDir/$task.trim.fastq.gz
 out=$task-unmapped.fastq.gz
 
 logStepStart $log
+
+echo "  Running on $(hostname)" >> $log
 echo "  FASTQ is $fastq" >> $log
 
 if [ -L $fastq ]
 then
     dest=$(readlink $fastq)
     echo "  $fastq is a symlink to $dest." >> $log
-    echo "  Attempting to read the destination file '$dest'." >> $log
+    echo "  Attempting to use zcat to read the destination file '$dest'." >> $log
     zcat $dest | head >/dev/null
-    echo "  Attempting to read the link '$fastq'." >> $log
+    case $? in
+        0) echo "    zcat read succeeded." >> $log;;
+        *) echo "    zcat read failed." >> $log;;
+    esac
+    echo "  Attempting to use zcat to read the link '$fastq'." >> $log
     zcat $fastq | head >/dev/null
+    case $? in
+        0) echo "    zcat read succeeded." >> $log;;
+        *) echo "    zcat read failed." >> $log;;
+    esac
 fi
 
 echo "  Sleeping to see if $fastq becomes available." >> $log
