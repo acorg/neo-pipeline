@@ -13,7 +13,7 @@ status:
 	slurm-pipeline-status.py --specification status.json
 
 cancel:
-	@jobs=$$(slurm-pipeline-status.py --specification status.json --printUnfinished); if [ -z "$$jobs" ]; then echo "No unfinished jobs."; else echo "Canceling $$(echo $$jobs | tr '\012' ' ')."; scancel $$jobs; fi
+	@jobs=$$(slurm-pipeline-status.py --specification status.json --printUnfinished); if [ -z "$$jobs" ]; then echo "No unfinished jobs."; else echo "Canceling $$(echo $$jobs | tr '\012' ' ')"; scancel $$jobs; fi
 
 unfinished:
 	slurm-pipeline-status.py --specification status.json --printUnfinished
@@ -23,7 +23,7 @@ clean:
                */slurm-*.out \
                slurm-pipeline.done \
                slurm-pipeline.error \
-               slurm-pipeline.running \
+               slurm-pipeline.running
 
 clobber: clean
 	rm -fr \
