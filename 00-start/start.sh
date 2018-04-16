@@ -43,6 +43,9 @@ then
     }
 fi
 
+echo "  Removing all old slurm-*.out files." >> $log
+rm -f ../0*/slurm-*.out
+
 tasks=$(tasksForSample)
 
 for task in $tasks
