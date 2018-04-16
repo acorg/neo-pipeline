@@ -66,7 +66,7 @@ function logStepStart()
 {
     # Pass a log file name.
     case $# in
-        1) echo "$(basename $(pwd)) started at $(date)." >> $1;;
+        1) echo "$(basename $(pwd)) started at $(date) on $(hostname)." >> $1;;
         *) echo "logStepStart must be called with 2 arguments." >&2;;
     esac
 }
@@ -78,4 +78,45 @@ function logStepStop()
         1) echo "$(basename $(pwd)) stopped at `date`" >> $1; echo >> $1;;
         *) echo "logStepStop must be called with 2 arguments." >&2;;
     esac
+}
+
+function checkFastq()
+{
+    local fastq=$1
+    local log=$2
+
+    echo "  Checking FASTQ file '$fastq'." >> $log
+
+    if [ ! -f $fastq ]
+    then
+        echo "  FASTQ file '$fastq' does not exist according to test -f." >> $log
+
+        if [ -L $fastq ]
+        then
+            dest=$(readlink $fastq)
+            echo "  $fastq is a symlink to $dest." >> $log
+            echo "  Attempting to use zcat to read the destination file '$dest'." >> $log
+            zcat $dest | head >/dev/null
+            case $? in
+                0) echo "    zcat read succeeded." >> $log;;
+                *) echo "    zcat read failed." >> $log;;
+            esac
+            echo "  Attempting to use zcat to read the link '$fastq'." >> $log
+            zcat $fastq | head >/dev/null
+            case $? in
+                0) echo "    zcat read succeeded." >> $log;;
+                *) echo "    zcat read failed." >> $log;;
+            esac
+        fi
+
+        echo "  Sleeping to see if '$fastq' becomes available." >> $log
+        sleep 3
+
+        if [ ! -f $fastq ]
+        then
+            echo "  FASTQ file '$fastq' still does not exist according to test -f." >> $log
+            logStepStop $log
+            exit 1
+        fi
+    fi
 }

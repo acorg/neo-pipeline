@@ -9,7 +9,7 @@ out=$task.json.bz2
 dbfile=$root/share/ncbi/diamond-dbs/viral-protein.dmnd
 
 logStepStart $log
-echo "  FASTQ file is $fastq" >> $log
+checkFastq $fastq $log
 
 if [ ! -f $dbfile ]
 then
