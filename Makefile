@@ -1,4 +1,4 @@
-.PHONY: x, run, clean-1, clean-2, clean-3
+.PHONY: x, run, clean, clobber, clean-stats
 
 x:
 	@echo "There is no default make target. Use 'make run' to run the SLURM pipeline."
@@ -18,20 +18,14 @@ cancel:
 unfinished:
 	slurm-pipeline-status.py --specification status.json --printUnfinished
 
-# Remove all large intermediate files. Only run this if you're sure you
-# want to throw away all that work!
-clean-1:
+clean:
 	rm -f \
-              02-map/*-unmapped.fastq.gz \
-              03-diamond/*.json.bz2
+               */slurm-*.out \
+               slurm-pipeline.done \
+               slurm-pipeline.error \
+               slurm-pipeline.running \
 
-# Remove SLURM output files.
-clean-2: clean-1
-	rm -f \
-              */slurm-*.out
-
-# Remove *all* intermediates, including the final panel output.
-clean-3: clean-2
+clobber: clean
 	rm -fr \
                logs \
                02-map/*.sam \
@@ -39,8 +33,6 @@ clean-3: clean-2
                04-panel/out \
                04-panel/summary-proteins \
                04-panel/summary-virus \
-               slurm-pipeline.done \
-               slurm-pipeline.running \
                status.json
 
 clean-stats:
