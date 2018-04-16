@@ -12,6 +12,9 @@ force:
 status:
 	slurm-pipeline-status.py --specification status.json
 
+cancel:
+	scancel $$(slurm-pipeline-status.py --specification status.json --printUnfinished)
+
 # Remove all large intermediate files. Only run this if you're sure you
 # want to throw away all that work!
 clean-1:
