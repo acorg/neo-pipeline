@@ -11,6 +11,18 @@ out=$task-unmapped.fastq.gz
 logStepStart $log
 echo "  FASTQ is $fastq" >> $log
 
+if [ -L $fastq ]
+then
+    dest=$(readlink $fastq)
+    echo "  $fastq is a symlink. Attempting to ls the destination file '$dest'." >> $log
+    set +e
+    ls $dest >/dev/null 2>&1
+    set -e
+fi
+
+echo "  Sleeping to see if $fastq becomes available." >> $log
+sleep 3
+
 if [ ! -f $fastq ]
 then
     echo "  FASTQ file '$fastq' does not exist." >> $log
