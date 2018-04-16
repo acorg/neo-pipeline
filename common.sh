@@ -90,12 +90,17 @@ function checkFastq()
     set +e
     if [ ! -f $fastq ]
     then
-        echo "  FASTQ file '$fastq' does not exist according to test -f." >> $log
+        echo "  FASTQ file '$fastq' does not exist, according to test -f." >> $log
 
         if [ -L $fastq ]
         then
             dest=$(readlink $fastq)
             echo "  $fastq is a symlink to $dest." >> $log
+
+            if [ ! -f $dest ]
+            then
+                echo "  Linked-to file '$dest' does not exist, according to test -f." >> $log
+            fi
 
             echo "  Attempting to use zcat to read the destination file '$dest'." >> $log
             # zcat $dest | head >/dev/null
@@ -119,7 +124,7 @@ function checkFastq()
 
         if [ ! -f $fastq ]
         then
-            echo "  FASTQ file '$fastq' still does not exist according to test -f." >> $log
+            echo "  FASTQ file '$fastq' still does not exist, according to test -f." >> $log
             logStepStop $log
             exit 1
         fi
