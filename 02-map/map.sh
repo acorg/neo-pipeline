@@ -14,10 +14,11 @@ echo "  FASTQ is $fastq" >> $log
 if [ -L $fastq ]
 then
     dest=$(readlink $fastq)
-    echo "  $fastq is a symlink. Attempting to ls the destination file '$dest'." >> $log
-    set +e
-    ls $dest >/dev/null 2>&1
-    set -e
+    echo "  $fastq is a symlink to $dest." >> $log
+    echo "  Attempting to read the destination file '$dest'." >> $log
+    zcat $dest | head >/dev/null
+    echo "  Attempting to read the link '$fastq'." >> $log
+    zcat $fastq | head >/dev/null
 fi
 
 echo "  Sleeping to see if $fastq becomes available." >> $log
