@@ -13,7 +13,7 @@ status:
 	slurm-pipeline-status.py --specification status.json
 
 cancel:
-	scancel $$(slurm-pipeline-status.py --specification status.json --printUnfinished)
+	jobs=$$(slurm-pipeline-status.py --specification status.json --printUnfinished); if [ -z "$$jobs" ]; then echo "No unfinished jobs."; else echo "Canceling $$jobs."; scancel $$jobs; fi
 
 unfinished:
 	slurm-pipeline-status.py --specification status.json --printUnfinished
