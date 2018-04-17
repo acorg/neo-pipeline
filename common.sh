@@ -66,7 +66,7 @@ function logStepStart()
 {
     # Pass a log file name.
     case $# in
-        1) echo "$(basename $(pwd)) started at $(date) on $(hostname)." >> $1;;
+        1) echo "$(basename $(pwd)) (SLURM job $SLURM_JOB_ID) started at $(date) on $(hostname)." >> $1;;
         *) echo "logStepStart must be called with 2 arguments." >&2;;
     esac
 }
@@ -75,7 +75,7 @@ function logStepStop()
 {
     # Pass a log file name.
     case $# in
-        1) echo "$(basename $(pwd)) stopped at `date`" >> $1; echo >> $1;;
+        1) echo "$(basename $(pwd)) (SLURM job $SLURM_JOB_ID) stopped at `date`" >> $1; echo >> $1;;
         *) echo "logStepStop must be called with 2 arguments." >&2;;
     esac
 }
