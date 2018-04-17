@@ -14,9 +14,26 @@ checkFastq $fastq $log
 
 function stats()
 {
-    # Write a file of frequency of read lengths.
-    zcat $fastq | filter-fasta.py --fastq |
-        awk 'NR % 4 == 2 {print length}' | sort | uniq -c | sort -nr > $lengthDistributionOut
+    # Remove all output files before doing anything, in case we fail for
+    # some reason (this script has sometimes run out of memory - not sure
+    # why).
+    rm -f $lengthDistributionOut $countOut $MD5Out
+
+    # Write a file of frequency of read lengths. Do it in several steps, to
+    # reduce peak memory consumption.
+    tmp1=$task.tmp1
+    tmp2=$task.tmp2
+
+    zcat $fastq | fasta-lengths.py --fastq | awk '{print $NF}' > $tmp1
+
+    sort < $tmp1 > $tmp2
+    rm $tmp1; mv $tmp2 $tmp1
+
+    uniq -c < $tmp1 > $tmp2
+    rm $tmp1; mv $tmp2 $tmp1
+
+    sort -nr < $tmp1 > $lengthDistributionOut
+    rm $tmp1
 
     # The total number of reads is the sum of the above length frequencies.
     echo -n "$fastq " > $countOut
