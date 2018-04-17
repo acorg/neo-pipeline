@@ -55,10 +55,13 @@ then
             # Remove the output file because it could be a pre-existing
             # symlink to very slow cold storage. We'll write to fast disk
             # and sometime later we can archive it if we want. Make sure to
-            # remove the destination of the link, if it's a link.
+            # remove the destination of the link too, if it's a link. Use
+            # -f in the rm because although the output file might be a
+            # symlink the destination file may be in cold storage and
+            # therefore not visible from the compute node.
             if [ -L $out ]
             then
-                rm $(readlink $out)
+                rm -f $(readlink $out)
             fi
             rm $out
             run_diamond
