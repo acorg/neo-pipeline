@@ -20,7 +20,7 @@ else
     echo "  Not simulating or skipping. Requesting exclusive node." >> $log
 fi
 
-jobid=`sbatch -n 1 $exclusive $SP_DEPENDENCY_ARG submit.sh $task | cut -f4 -d' '`
+jobid=$(sbatch -n 1 $exclusive $SP_NICE_ARG $SP_DEPENDENCY_ARG submit.sh $task | cut -f4 -d' ')
 echo "TASK: $task $jobid"
 
 echo "  Job id is $jobid" >> $log

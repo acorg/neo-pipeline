@@ -7,7 +7,7 @@ log=$logDir/sbatch.log
 echo "05-sample-count sbatch.sh running at `date`" >> $log
 echo "  Dependencies are $SP_DEPENDENCY_ARG" >> $log
 
-jobid=`sbatch -n 1 $SP_DEPENDENCY_ARG submit.sh "$@" | cut -f4 -d' '`
+jobid=$(sbatch -n 1 $SP_NICE_ARG $SP_DEPENDENCY_ARG submit.sh "$@" | cut -f4 -d' ')
 echo "TASK: panel $jobid"
 
 echo "  Job id is $jobid" >> $log
