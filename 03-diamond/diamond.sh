@@ -29,6 +29,9 @@ function skip()
 function run_diamond()
 {
     echo "  DIAMOND blastx started at `date`" >> $log
+
+    rmFileAndLink $out
+
     # Subtract 2 from the total number of cores so we have cores left for
     # the two processes in the pipeline following the diamond call.
     diamond blastx \
@@ -53,18 +56,6 @@ then
         if [ $SP_FORCE = "1" ]
         then
             echo "  Pre-existing output file $out exists, but --force was used. Overwriting." >> $log
-            # Remove the output file because it could be a pre-existing
-            # symlink to very slow cold storage. We'll write to fast disk
-            # and sometime later we can archive it if we want. Make sure to
-            # remove the destination of the link too, if it's a link. Use
-            # -f in the rm because although the output file might be a
-            # symlink the destination file may be in cold storage and
-            # therefore not visible from the compute node.
-            if [ -L $out ]
-            then
-                rm -f $(readlink $out)
-            fi
-            rm $out
             run_diamond
         else
             echo "  Will not overwrite pre-existing output file $out. Use --force to make me." >> $log

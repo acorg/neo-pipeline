@@ -144,3 +144,15 @@ function checkFastq()
     fi
     set -e
 }
+
+function rmFileAndLink()
+{
+    for file in "$@"
+    do
+        if [ -L $file ]
+        then
+            rm -f $(readlink $file)
+        fi
+        rm -f $file
+    done
+}

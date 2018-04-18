@@ -25,6 +25,8 @@ function skip()
 function sample_count()
 {
     echo "  sample count started at `date`" >> $log
+    rmFileAndLink $out
+
     for task in $tasks
     do
         cat $statsDir/$task.read-count
