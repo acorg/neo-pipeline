@@ -8,6 +8,7 @@ log=$sampleLogFile
 out=summary-virus
 
 logStepStart $log
+logTaskToSlurmOutput panel $log
 
 tasks=$(tasksForSample)
 

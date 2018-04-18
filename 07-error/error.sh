@@ -5,6 +5,7 @@
 log=$sampleLogFile
 
 logStepStart $log
+logTaskToSlurmOutput error $log
 
 echo "  ERROR!! SLURM pipeline finished at `date`" >> $log
 

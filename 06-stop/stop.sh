@@ -5,6 +5,7 @@
 log=$sampleLogFile
 
 logStepStart $log
+logTaskToSlurmOutput stop $log
 
 echo "  Creating $doneFile." >> $log
 touch $doneFile

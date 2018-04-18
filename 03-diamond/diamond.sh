@@ -9,6 +9,7 @@ out=$task.json.bz2
 dbfile=$root/share/ncbi/diamond-dbs/viral-protein.dmnd
 
 logStepStart $log
+logTaskToSlurmOutput $task $log
 checkFastq $fastq $log
 
 if [ ! -f $dbfile ]

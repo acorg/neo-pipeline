@@ -7,6 +7,7 @@
 log=$sampleLogFile
 
 logStepStart $log
+logTaskToSlurmOutput sample-count $log
 
 tasks=$(tasksForSample)
 sample=$(sampleName)

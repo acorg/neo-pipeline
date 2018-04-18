@@ -75,9 +75,22 @@ function logStepStop()
 {
     # Pass a log file name.
     case $# in
-        1) echo "$(basename $(pwd)) (SLURM job $SLURM_JOB_ID) stopped at `date`" >> $1; echo >> $1;;
+        1) echo "$(basename $(pwd)) (SLURM job $SLURM_JOB_ID) stopped at $(date)" >> $1; echo >> $1;;
         *) echo "logStepStop must be called with 2 arguments." >&2;;
     esac
+}
+
+function logTaskToSlurmOutput()
+{
+    local task=$1
+    local log=$2
+
+    # The following will appear in the slurm-*.out (because we don't
+    # redirect it to $log). This is useful if there is an error that only
+    # appears in the SLURM output, file because it tells us what sample log
+    # file to go look at, to re-run, etc.
+    echo "Task $task (SLURM job $SLURM_JOB_ID) started at $(date)"
+    echo "Task log file is $log"
 }
 
 function checkFastq()

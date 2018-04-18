@@ -9,7 +9,7 @@ fastq=$dataDir/$task.trim.fastq.gz
 out=$task-unmapped.fastq.gz
 
 logStepStart $log
-
+logTaskToSlurmOutput $task $log
 checkFastq $fastq $log
 
 if [ ! -f $bwadb.bwt ]

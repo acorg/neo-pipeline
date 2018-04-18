@@ -10,6 +10,7 @@ MD5Out=$statsDir/$task.md5
 lengthDistributionOut=$statsDir/$task.read-lengths
 
 logStepStart $log
+logTaskToSlurmOutput $task $log
 checkFastq $fastq $log
 
 function stats()
