@@ -54,7 +54,7 @@ function panel()
     then
         rm -fr $(readlink $outputDir)
     fi
-    rm -fr $outputDir summary-proteins
+    rm -fr $outputDir summary-proteins $out
 
     noninteractive-alignment-panel.py \
       --json $json \
