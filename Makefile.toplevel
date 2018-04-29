@@ -1,0 +1,18 @@
+# This is the Makefile that should be installed at the top level of the
+# processing. I.e., in the directory where all the sample directories
+# are. It has targets that pull information out from across all samples
+# once they are all individually finished.
+
+.PHONY: all, html, tar, clean
+
+all:
+        @echo "There is no default make target. Try make html or make tar."
+
+html:
+        ls NEO*/04-panel/summary-proteins | proteins-to-pathogens.py --format fastq --html --minProteinFraction 0.1 --pathogenPanelFilename virus.png --sampleNameRegex '^([^/]+)/' --proteinFastaFilename /rds/project/djs200/rds-djs200-acorg/bt/root/share/ncbi/viral-refseq/viral-protein-20161124/viral.protein.fasta --pathogenType viral > virus.html
+
+tar:
+        tar cfvj results.tar.bz2 NEO*/04-panel/out virus.*
+
+clean:
+        NEO*/04-panel/out/pathogen-*.fast* virus.{html,png}

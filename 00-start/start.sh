@@ -3,7 +3,7 @@
 . ../common.sh
 
 # We cannot initially write to a log file because the log directory may not
-# exist yet. So write initial errors to stdout.
+# exist yet. So write initial errors to stderr.
 
 # Remove the top-level logging directory (with a sanity check on its name).
 if [ ! "$logDir" = ../logs ]
@@ -28,7 +28,7 @@ mkdir $logDir || {
 log=$sampleLogFile
 logStepStart $log
 
-# Remove the marker file that indicates when a job is fully complete or
+# Remove the marker files that indicate when a job is fully complete or
 # that there has been an error and touch the file that shows we're running.
 rm -f $doneFile $errorFile
 touch $runningFile

@@ -1,4 +1,4 @@
-.PHONY: x, run, clean, clobber, clean-stats
+.PHONY: x, run, force, status, cancel, unfinished, clean, clobber, clean-stats
 
 x:
 	@echo "There is no default make target. Use 'make run' to run the SLURM pipeline."
