@@ -5,11 +5,24 @@
 
 .PHONY: all, html, tar, clean
 
+DB := /rds/project/djs200/rds-djs200-acorg/bt/root/share/ncbi/viral-refseq/viral-protein-20161124/viral.protein.fasta
+
 all:
         @echo "There is no default make target. Try make html or make tar."
 
 html:
-        ls NEO*/04-panel/summary-proteins | proteins-to-pathogens.py --format fastq --html --minProteinFraction 0.1 --pathogenPanelFilename virus.png --sampleNameRegex '^([^/]+)/' --proteinFastaFilename /rds/project/djs200/rds-djs200-acorg/bt/root/share/ncbi/viral-refseq/viral-protein-20161124/viral.protein.fasta --pathogenType viral > virus.html
+        ls NEO*/04-panel/summary-proteins | \
+        proteins-to-pathogens.py \
+            --format fastq \
+            --html \
+            --minProteinFraction 0.1 \
+            --sampleNameRegex '^([^/]+)/' \
+            --pathogenType viral \
+            --proteinFastaFilename $(DB) \
+            --pathogenPanelFilename virus.png \
+            --sampleIndexFilename samples.index \
+            --pathogenIndexFilename pathogens.index \
+            > virus.html
 
 tar:
         tar cfvj results.tar.bz2 NEO*/04-panel/out virus.*
